@@ -35,8 +35,7 @@ LexiScope/
 │   │   ├── .env.example          # Plantilla de configuración
 │   │   ├── huggingface.py        # Script CLI para extracción
 │   │   ├── api.py                # API REST con FastAPI
-│   │   ├── requirements.txt      # Dependencias de Hugging Face
-│   │   └── README_API.md         # Documentación detallada de la API
+│   │   └── requirements.txt      # Dependencias de Hugging Face
 │   └── openai/
 │       ├── .env.example          # Plantilla de configuración
 │       ├── nopenai.py            # Script CLI para extracción
@@ -385,11 +384,6 @@ Apoyar la prohibición del reconocimiento facial en espacios públicos es un pas
 }
 ```
 
-## 📚 Documentación Adicional
-
-Para más detalles sobre la API REST, consulta la documentación específica:
-
-- [README_API.md](src/hugging_face/README_API.md) - Guía completa de la API con ejemplos avanzados
 
 ## 🛠️ Desarrollo y Contribución
 
