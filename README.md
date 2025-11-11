@@ -180,7 +180,7 @@ if __name__ == "__main__":
 
 **Modelos disponibles:**
 
-Por defecto usa `gpt-4o-mini`. Puedes cambiarlo pasando el parámetro `modelo`:
+Por defecto usa `gpt-5-nano`. Puedes cambiarlo pasando el parámetro `modelo`:
 
 ```python
 resultado = topics_and_keywords_openai(texto, modelo="gpt-4")
