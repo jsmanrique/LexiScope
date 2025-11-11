@@ -13,6 +13,7 @@
   - [Script de Hugging Face](#script-de-hugging-face)
   - [Script de OpenAI](#script-de-openai)
   - [API REST (Hugging Face)](#api-rest-hugging-face)
+  - [API REST (OpenAI)](#api-rest-openai)
 - [Ejemplos de Salida](#-ejemplos-de-salida)
 - [Documentación Adicional](#-documentación-adicional)
 - [Licencia](#-licencia)
