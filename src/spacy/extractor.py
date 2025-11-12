@@ -1,7 +1,9 @@
+# SPDX-FileCopyrightText: © 2025 J. Manrique Lopez de la Fuente <jsmanrique@gmail.com>
+# SPDX-License-Identifier: MIT
+
 """
-Extractor de Topics y Keywords para textos en español
-Requiere: pip install spacy scikit-learn nltk
-Además: python -m spacy download es_core_news_sm
+extractor.py: Extractor de Topics y Keywords para textos en español
+Requiere además ejecutar: python -m spacy download es_core_news_sm
 """
 
 import spacy

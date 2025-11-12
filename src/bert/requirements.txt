@@ -1,0 +1,6 @@
+transformers
+sentence-transformers
+keybert
+scikit-learn
+numpy
+torch

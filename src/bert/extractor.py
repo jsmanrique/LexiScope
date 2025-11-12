@@ -1,9 +1,8 @@
-"""
-Extractor de Topics y Keywords usando BERT y modelos Transformer
-Requiere: pip install transformers sentence-transformers keybert scikit-learn numpy torch
-"""
+# SPDX-FileCopyrightText: © 2025 J. Manrique Lopez de la Fuente <jsmanrique@gmail.com>
+# SPDX-License-Identifier: MIT
 
-import nltk
+"""extractor.py: Extractor de Topics y Keywords usando BERT y modelos Transformer"""
+
 from keybert import KeyBERT
 from sentence_transformers import SentenceTransformer
 from transformers import pipeline, AutoTokenizer, AutoModel
@@ -13,8 +12,6 @@ from sklearn.cluster import KMeans
 from nltk.corpus import stopwords
 import warnings
 warnings.filterwarnings('ignore')
-
-nltk.download('stopwords')
 
 class ExtractorBERT:
     def __init__(self, modelo='paraphrase-multilingual-MiniLM-L12-v2'):
