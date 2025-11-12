@@ -12,6 +12,8 @@
 - [Uso](#-uso)
   - [Script de Hugging Face](#script-de-hugging-face)
   - [Script de OpenAI](#script-de-openai)
+  - [Script de spaCy](#script-de-spacy)
+  - [Script de BERT](#script-de-bert)
   - [API REST (Hugging Face)](#api-rest-hugging-face)
   - [API REST (OpenAI)](#api-rest-openai)
 - [Ejemplos de Salida](#-ejemplos-de-salida)
@@ -20,12 +22,14 @@
 
 ## ✨ Características
 
-- 🤖 **Dos implementaciones**: Hugging Face y OpenAI
-- 🌐 **API REST**: Servicio web completo con FastAPI
+- 🤖 **Cuatro implementaciones**: Hugging Face, OpenAI, spaCy y BERT
+- 🌐 **API REST**: Servicio web completo con FastAPI (Hugging Face y OpenAI)
 - 📊 **Extracción inteligente**: 3-5 tópicos y 5-10 keywords por texto
-- 🔒 **Seguridad**: Gestión de API keys mediante variables de entorno
-- 📝 **Documentación automática**: Swagger UI y ReDoc integrados
+- 🔒 **Seguridad**: Gestión de API keys mediante variables de entorno (cuando aplica)
+- 📝 **Documentación automática**: Swagger UI y ReDoc integrados (APIs REST)
 - 🇪🇸 **Optimizado para español**: Análisis especializado en textos en castellano
+- 🔬 **Análisis local**: spaCy y BERT trabajan completamente offline sin APIs externas
+- 🎯 **Múltiples enfoques**: Desde extracción ligera (spaCy) hasta análisis semántico profundo (BERT)
 
 ## 📁 Estructura del Proyecto
 
@@ -37,11 +41,17 @@ LexiScope/
 │   │   ├── huggingface.py        # Script CLI para extracción
 │   │   ├── api.py                # API REST con FastAPI
 │   │   └── requirements.txt      # Dependencias de Hugging Face
-│   └── openai/
-│       ├── .env.example          # Plantilla de configuración
-│       ├── nopenai.py            # Script CLI para extracción
-│       ├── api.py                # API REST con FastAPI
-│       └── requirements.txt      # Dependencias de OpenAI
+│   ├── openai/
+│   │   ├── .env.example          # Plantilla de configuración
+│   │   ├── nopenai.py            # Script CLI para extracción
+│   │   ├── api.py                # API REST con FastAPI
+│   │   └── requirements.txt      # Dependencias de OpenAI
+│   ├── spacy/
+│   │   ├── extractor.py          # Extracción con spaCy
+│   │   └── requirements.txt      # Dependencias de spaCy
+│   └── bert/
+│       ├── extractor.py          # Extracción con BERT/Transformers
+│       └── requirements.txt      # Dependencias de BERT
 ├── LICENSE                       # Licencia MIT
 └── README.md                     # Este archivo
 ```
@@ -50,7 +60,8 @@ LexiScope/
 
 - **Python 3.8+**
 - **pip** (gestor de paquetes de Python)
-- Una cuenta en [Hugging Face](https://huggingface.co/) o [OpenAI](https://openai.com/) según la implementación que vayas a usar
+- **Para Hugging Face/OpenAI**: Una cuenta en [Hugging Face](https://huggingface.co/) o [OpenAI](https://openai.com/)
+- **Para spaCy/BERT**: No se requiere cuenta externa (análisis completamente local)
 
 ## 📦 Instalación
 
@@ -81,6 +92,46 @@ pip install -r requirements.txt
 - `fastapi` - Framework para la API REST
 - `uvicorn[standard]` - Servidor ASGI para FastAPI
 - `pydantic` - Validación de datos
+
+### Instalación para spaCy
+
+```bash
+cd src/spacy
+pip install -r requirements.txt
+
+# Descargar el modelo de español (obligatorio)
+python -m spacy download es_core_news_sm
+
+# Opcional: Descargar modelo más grande y preciso
+python -m spacy download es_core_news_lg
+```
+
+**Dependencias instaladas:**
+- `spacy` - Framework de NLP para Python
+- `scikit-learn` - Machine learning (para TF-IDF y clustering)
+- `nltk` - Natural Language Toolkit
+
+**Modelos de spaCy disponibles:**
+- `es_core_news_sm` - Modelo pequeño (12 MB), rápido
+- `es_core_news_md` - Modelo mediano (40 MB), equilibrado
+- `es_core_news_lg` - Modelo grande (545 MB), más preciso
+
+### Instalación para BERT
+
+```bash
+cd src/bert
+pip install -r requirements.txt
+```
+
+**Dependencias instaladas:**
+- `transformers` - Modelos Transformer de Hugging Face
+- `sentence-transformers` - Embeddings de frases con BERT
+- `keybert` - Extracción de keywords usando BERT
+- `scikit-learn` - Machine learning (para clustering)
+- `numpy` - Computación numérica
+- `torch` - PyTorch (backend para transformers)
+
+**Nota**: La primera ejecución descargará automáticamente los modelos BERT necesarios (~500MB). Los modelos se cachean localmente para usos posteriores.
 
 ## ⚙️ Configuración
 
@@ -185,6 +236,184 @@ Por defecto usa `gpt-5-nano`. Puedes cambiarlo pasando el parámetro `modelo`:
 ```python
 resultado = topics_and_keywords_openai(texto, modelo="gpt-4")
 ```
+
+### Script de spaCy
+
+El script `extractor.py` utiliza modelos de spaCy para análisis NLP **completamente local** (sin necesidad de internet).
+
+**Ejecutar el script:**
+
+```bash
+cd src/spacy
+python extractor.py
+```
+
+**Características principales:**
+
+El script incluye tres clases de extracción:
+
+1. **ExtractorSpacy** - Análisis básico con spaCy
+   - Extrae entidades nombradas (NER)
+   - Identifica palabras clave por frecuencia
+   - Análisis de dependencias sintácticas
+
+2. **ExtractorTFIDF** - Análisis con TF-IDF
+   - Keywords basadas en relevancia estadística (TF-IDF)
+   - Bigramas y trigramas más importantes
+   - Análisis de n-gramas frecuentes
+
+3. **ExtractorCombinado** - Análisis completo
+   - Combina spaCy + TF-IDF + clustering
+   - Agrupa oraciones en topics semánticos
+   - Genera resumen automático del texto
+
+**Ejemplo de uso:**
+
+```python
+from extractor import ExtractorCombinado
+
+# Crear extractor
+extractor = ExtractorCombinado(modelo='es_core_news_sm')
+
+# Analizar texto
+texto = "Tu texto aquí..."
+resultados = extractor.analizar_texto_completo(texto)
+
+# Resultados incluyen:
+# - Keywords de spaCy (por frecuencia)
+# - Keywords de TF-IDF (por relevancia)
+# - Entidades nombradas
+# - Topics principales (clustering)
+# - Resumen del texto
+```
+
+**Personalizar el análisis:**
+
+Edita el archivo y modifica el ejemplo en `if __name__ == "__main__":`
+
+```python
+if __name__ == "__main__":
+    texto = """
+    Tu texto personalizado aquí...
+    """
+    
+    extractor = ExtractorCombinado(modelo='es_core_news_lg')  # Cambiar modelo
+    resultados = extractor.analizar_texto_completo(
+        texto,
+        n_keywords_spacy=15,    # Más keywords de spaCy
+        n_keywords_tfidf=10,    # Keywords de TF-IDF
+        n_topics=5,             # Número de topics
+        n_resumen=5             # Oraciones en resumen
+    )
+```
+
+**Ventajas de spaCy:**
+- ✅ Análisis local rápido (sin APIs)
+- ✅ Bajo consumo de recursos
+- ✅ Gratuito y sin límites de uso
+- ✅ Análisis morfológico y sintáctico detallado
+
+### Script de BERT
+
+El script `extractor.py` utiliza modelos Transformer (BERT) para análisis semántico profundo **sin necesidad de APIs externas**.
+
+**Ejecutar el script:**
+
+```bash
+cd src/bert
+python extractor.py
+```
+
+**Características principales:**
+
+El script incluye dos clases:
+
+1. **ExtractorBERT** - Análisis con KeyBERT y embeddings contextuales
+   - Keywords con embeddings de BERT
+   - Clustering semántico de oraciones
+   - Identificación de oraciones clave
+   - Temas principales por similitud
+
+2. **ExtractorBERTAvanzado** - Análisis avanzado con clasificación
+   - Todas las funciones de ExtractorBERT
+   - Clasificación zero-shot en categorías personalizadas
+   - Análisis de sentimiento y temas
+
+**Ejemplo básico (ExtractorBERT):**
+
+```python
+from extractor import ExtractorBERT
+
+# Crear extractor (usa modelo multilingüe por defecto)
+extractor = ExtractorBERT()
+
+# Análisis completo
+texto = "Tu texto aquí..."
+resultados = extractor.analizar_texto_completo(
+    texto,
+    n_keywords=10,
+    n_temas=3,
+    n_oraciones_clave=3
+)
+
+# Resultados incluyen:
+# - Keywords individuales (con scores de relevancia)
+# - Frases clave (bigramas)
+# - Oraciones más relevantes
+# - Topics principales (clustering semántico)
+```
+
+**Ejemplo avanzado (con clasificación):**
+
+```python
+from extractor import ExtractorBERTAvanzado
+
+# Crear extractor avanzado
+extractor = ExtractorBERTAvanzado()
+
+# Análisis completo
+resultados = extractor.analizar_texto_completo(texto)
+
+# Clasificación por categorías personalizadas
+categorias = [
+    "tecnología",
+    "política", 
+    "economía",
+    "medio ambiente",
+    "salud"
+]
+
+clasificacion = extractor.clasificar_en_categorias(texto, categorias)
+# Retorna: [(categoria, score), ...]
+```
+
+**Modelos BERT recomendados para español:**
+
+```python
+# Modelo 1: Multilingüe rápido (por defecto)
+extractor = ExtractorBERT(modelo='paraphrase-multilingual-MiniLM-L12-v2')
+
+# Modelo 2: Español específico
+extractor = ExtractorBERT(modelo='hiiamsid/sentence_similarity_spanish_es')
+
+# Modelo 3: BETO (BERT español completo)
+extractor = ExtractorBERT(modelo='dccuchile/bert-base-spanish-wwm-uncased')
+
+# Modelo 4: RoBERTa español del gobierno
+extractor = ExtractorBERT(modelo='PlanTL-GOB-ES/roberta-base-bne')
+```
+
+**Ventajas de BERT:**
+- ✅ Análisis semántico profundo
+- ✅ Comprensión contextual del texto
+- ✅ Keywords más relevantes que métodos estadísticos
+- ✅ Clustering semántico preciso
+- ✅ Clasificación zero-shot sin entrenamiento
+
+**Nota sobre rendimiento:**
+- Primera ejecución: Descarga modelos (~500MB, solo una vez)
+- Ejecuciones posteriores: Uso de caché local
+- Recomienda GPU para textos muy largos (opcional)
 
 ### API REST (OpenAI)
 
