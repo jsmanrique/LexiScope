@@ -1,6 +1,6 @@
 # LexiScope
 
-**LexiScope** es una prueba de concepto (PoC) minimalista de un servicio y conjunto de herramientas para extraer tópicos y palabras clave de textos en español utilizando modelos de lenguaje avanzados.
+**LexiScope** es una prueba de concepto (PoC) minimalista de un servicio para extraer tópicos y palabras clave de textos en español utilizando modelos de lenguaje avanzados.
 
 ## 📋 Tabla de Contenidos
 
@@ -251,13 +251,6 @@ response = requests.post(
 print(response.json())
 ```
 
-**Modelos disponibles:**
-
-- `gpt-4o-mini` (por defecto) - Rápido y económico
-- `gpt-4o` - Mayor capacidad y precisión
-- `gpt-4-turbo` - Balance entre rendimiento y coste
-- `gpt-4` - Modelo más potente
-
 ### API REST (Hugging Face)
 
 La API REST proporciona un servicio web completo para análisis de textos.
@@ -472,4 +465,4 @@ Para reportar problemas o sugerir mejoras, abre un issue en el repositorio del p
 
 ---
 
-**Desarrollado con ❤️ para facilitar el análisis de textos en español**
+**Desarrollado con ❤️ y 🤖 para facilitar el análisis de textos en español**
