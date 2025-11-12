@@ -9,10 +9,32 @@ from transformers import pipeline, AutoTokenizer, AutoModel
 import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.cluster import KMeans
-from nltk.corpus import stopwords
+#from nltk.corpus import stopwords
+#from spacy.lang.es.stop_words import STOP_WORDS
 import warnings
 warnings.filterwarnings('ignore')
 
+stopwords = [
+    "a","al","algo","algunas","algunos","allí","allá","ante","antes","aquel","aquella","aquellas","aquellos","aquí","así","aún","aunque",
+    "bajo","bastante","bien",
+    "cada","casi","como","con","contra","cual","cuales","cuando","cuanta","cuantas","cuanto","cuantos","cuya","cuyas","cuyo","cuyos",
+    "de","debe","deben","debido","decir","del","demás","demasiado","dentro","desde","después","donde","dos","durante",
+    "e","el","ella","ellas","ello","ellos","embargo","en","encima","entonces","entre","era","erais","eran","eras","eres","es","esa","esas","ese","eso","esos","esta","estaba","estaban","estado","estados","estáis","estamos","estar","estas","este","esto","estos","estoy","estuvo","están","esté","estén",
+    "fin","fue","fuera","fueron","fui","fuimos",
+    "ha","haber","había","habían","habéis","habemos","haberlo","habrá","habrán","habrás","habré","habréis","habremos","habría","habríais","habríamos","habrían","hace","hacen","hacer","hacia","han","hasta","hay","haya","hayan","he","hemos",
+    "incluso",
+    "la","las","le","les","lo","los","luego","lugar",
+    "más","me","menos","mi","mis","mientras","mío","mía","míos","mías","muy","mucho","muchas","muchos",
+    "nada","ni","ninguna","ningunas","ninguno","ningunos","no","nos","nosotras","nosotros","nuestra","nuestras","nuestro","nuestros","nunca",
+    "o","os","otra","otras","otro","otros",
+    "para","parece","pero","poco","por","porque","porqué","primero","puede","pueden","pues",
+    "que","qué","quien","quienes","quién","quiénes",
+    "se","sea","sean","según","ser","si","sí","sido","siempre","sin","sino","sobre","sois","solamente","solo","sólo","somos","son","soy","su","sus",
+    "tal","también","tampoco","tan","tanto","te","tenemos","tener","tengo","ti","tiempo","tiene","tienen","toda","todas","todavía","todo","todos","tu","tus","tuya","tuyas","tuyo","tuyos",
+    "un","una","unas","uno","unos","usted","ustedes",
+    "va","vais","valor","vamos","van","varios","vaya","veces","ver","vez","vosotras","vosotros","voy",
+    "ya","yo"
+]
 class ExtractorBERT:
     def __init__(self, modelo='paraphrase-multilingual-MiniLM-L12-v2'):
         """
@@ -44,10 +66,13 @@ class ExtractorBERT:
             ngram_range: Rango de n-gramas (1,1)=palabras, (1,2)=palabras+bigramas
             diversidad: 0-1, mayor valor = keywords más diversas (usa MMR)
         """
+        
         keywords = self.kw_model.extract_keywords(
             texto,
             keyphrase_ngram_range=ngram_range,
-            stop_words=None,
+            #stop_words=stopwords.words('spanish'),
+            #stop_words=list(STOP_WORDS),
+            stop_words=stopwords,
             top_n=top_n,
             use_mmr=True,  # Maximal Marginal Relevance para diversidad
             diversity=diversidad
@@ -93,7 +118,9 @@ class ExtractorBERT:
             keywords_cluster = self.kw_model.extract_keywords(
                 texto_cluster,
                 keyphrase_ngram_range=(1, 2),
-                stop_words=None,
+                #stop_words=stopwords.words('spanish'),
+                #stop_words=list(STOP_WORDS),
+                stop_words=stopwords,
                 top_n=5,
                 use_mmr=True,
                 diversity=0.7
