@@ -1,3 +1,8 @@
+# SPDX-FileCopyrightText: © 2025 J. Manrique Lopez de la Fuente <jsmanrique@gmail.com>
+# SPDX-License-Identifier: MIT
+
+"""huggingface.py: Script para extracción de tópicos y keywords de un texto usando Hugging Face API."""
+
 import os
 import json
 from huggingface_hub import InferenceClient

@@ -1,3 +1,8 @@
+# SPDX-FileCopyrightText: © 2025 J. Manrique Lopez de la Fuente <jsmanrique@gmail.com>
+# SPDX-License-Identifier: MIT
+
+"""nopenai.py: Script para extracción de tópicos y keywords de un texto usando OpenAI API."""
+
 import os
 from openai import OpenAI
 from dotenv import load_dotenv
